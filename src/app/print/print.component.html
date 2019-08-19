@@ -1,0 +1,23 @@
+<div class="print-default-message">
+    <div class="print-msg-wpr h-100 row align-items-center">
+
+        <!--WAINTING-->
+        <p class='error-msg' *ngIf="waiting">
+          Aguarde a impressão <br>e retire seu comprovante abaixo <br>
+          <i class="fa fa-print fa-4x" aria-hidden="true"></i>
+        </p>
+
+        <!--PRINT SUCCESS-->
+        <div class="msg-senha" *ngIf="senha && !waiting">
+          <p class="msg-top">Obrigado. Sua senha é:</p>
+          <p class="senha">{{ valorSenha }}</p>
+          <p class="msg-bottom">Por favor, aguarde a chamada do atendente.</p>
+        </div>
+
+        <!--ERROR COMUNICATION-->
+        <p class='error-msg' *ngIf="error">
+          Não foi possível imprimir o seu ticket! <br>Procure por um de nossos atendentes. <br>
+          <i class="fa fa-warning fa-4x" aria-hidden="true"></i>
+        </p>
+    </div>
+</div>
