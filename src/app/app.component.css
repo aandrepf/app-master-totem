@@ -1,0 +1,30 @@
+@font-face {
+  font-family: gilroyM;
+  src: url('./../fonts/gilroy-medium-webfont.woff2') format('woff2'),
+       url('./../fonts/gilroy-medium-webfont.woff') format('woff'),
+       url('./../fonts/gilroy-medium-webfont.ttf') format('truetype');
+  font-weight: normal;font-style: normal;
+}
+.wrapper {
+  background-image: url('./../assets/images/bg-vertical.jpg');
+  background-repeat: no-repeat;
+  min-height: 100%;
+  background-size: 100%;
+}
+.content-wrapper {
+  padding: 40px 0px 40px 40px;
+}
+.version-info {
+  position: fixed;
+  bottom: 0;
+  left: 5px;
+}
+.version-info small {
+  font-family: gilroyM;
+  color: #ffffff;
+}
+@media only screen and (min-width: 1366px) and (max-width: 1920px) {
+  .wrapper {
+    background-image: url('./../assets/images/bg-horizontal.jpg');
+  }
+}

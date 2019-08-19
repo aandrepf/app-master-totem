@@ -1,0 +1,151 @@
+<ngx-spinner bdOpacity = 0.9 bdColor = "#212121" size = "large" color = "#fff" type = "ball-clip-rotate-pulse" fullScreen = "true">
+  <!-- STATES DA APLICAÇÃO -->
+  <div class="col-sm-12 info-states">
+    <p class="spinner-state">aguarde, carregando interface...</p>
+  </div>
+</ngx-spinner>
+<div *ngIf="load;else NoPage">
+    <div *ngIf="pagina">
+      <div class="page-header">
+        <p class="titulo-pagina" *ngFor="let item of pagina.interfaceEmissorTituloPagina;let i = index"
+          [style.padding-top.px]="item.length === 1 ? 27 : 0"
+          [style.font-size.pt]="item.tamanhoFonte"
+          [style.line-height.pt]="item.tamanhoFonte"
+          [style.font-weight]="item.negrito === true ? 700 : 400"
+        >{{ item.textoPagina }}</p>
+        <img src="./assets/images/back.png" alt="Botão Voltar" *ngIf="pagina.btnVoltar" (click)="previousPage()">
+        <p class="retirar-senha">Retire aqui sua <span>SENHA/TICKET</span></p>
+      </div>
+      <div class="page-content">
+
+        <!--LINKS-->
+        <div *ngFor="let item of links;let i = index"
+          class="d-flex btn-padrao btn-padrao links-{{ i % 2 === 0 ? 'left' : 'right' }}"
+          [style.height]="item.iconePrioritario && item.interfaceEmissorTituloLink.length !== 1 ? '100%' : '217px'"
+          (click)="navigate(item.idEmissorPagina, item.idEmissorPaginasDestino)"
+          [style.display]="mostraLink(item.idEmissorPaginasDestino)"
+        >
+
+          <div class="justify-content-center align-self-center">
+            <p *ngFor="let titulos of item.interfaceEmissorTituloLink;let i = index"
+              class="links-text link-{{ i === 0 ? 'atendimento' : 'servico' }}"
+              [style.font-size.pt]="titulos.tamanhoFonte"
+              [style.line-height.pt]="i === 0 ? titulos.tamanhoFonte + 6 : 'inherit'"
+              [style.font-weight]="titulos.negrito === true ? 700 : 400"
+              [style.text-align]="getPosicaoTexto(titulos.posicaoTexto)"
+              >
+              <span class="{{ titulos.textoLink.match(regexNegrito) ? 'highlight' : 'default' }}">{{ titulos.textoLink.replace(regexNegrito, '$2') }}</span>
+            </p>
+            <div class="image-content" *ngIf="item.iconePrioritario">
+                <img src="./assets/images/picto.png" alt="Pictograma">
+            </div>
+          </div>
+
+        </div>
+
+        <!--BOTOES-->
+        <div
+          *ngFor="let item of botoes;let i = index"
+          class="d-flex btn-padrao buttons-{{ i % 2 === 0 ? 'left' : 'right' }}"
+          [ngStyle]="{'background-image': 'url(assets/' + item.nomeImage + ')', 'background-size': 'cover'}"
+          [style.background-position]=" item.iconePrioritario && item.textoBotao.indexOf(',') !== -1 && item.textoBotao.split(', ').length >= 5 ? '0px 0px' : '0px 0px'"
+          [style.height]="item.iconePrioritario && item.textoBotao.indexOf(',') !== -1 && item.textoBotao.split(', ').length >= 5 ? '100%' : '217px'"
+          (click)="emitSenha(item.idBotao, item.tipoBotao)">
+          <div class="justify-content-center align-self-center">
+            <!--TEMPLATE DE BOTÃO COM IMAGEM-->
+            <p class="has-image" *ngIf="item.hasImage && item.nomeImage !== 'btn_branco.png' && item.nomeImage !== 'btn_702.png' && item.nomeImage !== 'btn_702_picto.png';else NoImageButton">
+
+              <!--TEXTO BOTAO 702-->
+              <span *ngIf="item.nomeImage.indexOf('702') !== -1;else span703">
+                <span style="color: #ffffff;font-weight: 700;"
+                [style.font-size.pt]="item.tamanhoBotao + 9"
+                [style.line-height.pt]="item.tamanhoBotao + 7"
+                [style.text-align]="getPosicaoTexto(3)"
+                >{{ item.textoBotao.substr(0, 7).split(' ')[0] }}</span><br>
+                <span style="color: #ffffff;"
+                [style.font-size.pt]="item.tamanhoBotao + 6"
+                [style.line-height.pt]="item.tamanhoBotao + 3"
+                [style.text-align]="getPosicaoTexto(3)"
+                >{{ item.textoBotao.substr(0, 7).split(' ')[0] === 'Gerente' ? item.textoBotao.substring(8) : item.textoBotao.substring(6)  }}</span>
+              </span>
+
+
+              <!--TEXTO BOTAO 703-->
+              <ng-template #span703>
+                  <span class="text-local"
+                  [style.font-size.pt]="item.tamanhoBotao + 9"
+                  [style.line-height.pt]="item.tamanhoBotao + 7"
+                  [style.text-align]="getPosicaoTexto(3)"
+                  >{{ item.textoBotao.substr(0, 7).split(' ')[0] }}</span><br>
+                  <span class="text-categoria"
+                  [style.font-size.pt]="item.tamanhoBotao + 6"
+                  [style.line-height.pt]="item.tamanhoBotao + 3"
+                  [style.text-align]="getPosicaoTexto(3)"
+                  >{{ item.textoBotao.substr(0, 7).split(' ')[0] === 'Gerente' ? item.textoBotao.substring(8) : item.textoBotao.substring(6)  }}</span>
+              </ng-template>
+            </p>
+
+            <!--TEMPLATE DE BOTÃO SEM IMAGEM-->
+            <ng-template #NoImageButton>
+              <ul *ngIf="item.textoBotao.indexOf(',') !== -1">
+                <li
+                *ngFor="let chars of item.textoBotao.split(', ');let i = index"
+                class="button-text"
+                [style.text-align]="getPosicaoTexto(3)"
+                [style.font-size.pt]="i === 0 && chars.match(regexNegrito) ? item.tamanhoBotao + 4 : item.tamanhoBotao"
+                [style.line-height.pt]="i === 0 && chars.match(regexNegrito) ? item.tamanhoBotao + 10 : item.tamanhoBotao">
+                  <span
+                  style="color: #ffffff;" *ngIf="item.nomeImage.indexOf('702') !== -1;else spanList703"
+                  class="{{ chars.match(regexNegrito) ? 'highlight-btn' : 'default-btn' }}"
+                  >{{ chars.replace(regexNegrito, '$2') }}</span>
+
+                  <!--TEXTO LISTA BOTAO 703-->
+                  <ng-template #spanList703>
+                    <span
+                    class="{{ chars.match(regexNegrito) ? 'highlight-btn' : 'default-btn' }}"
+                    >{{ chars.replace(regexNegrito, '$2') }}</span>
+                  </ng-template>
+                </li>
+              </ul>
+
+              <h3 *ngIf="item.textoBotao.indexOf(',') === -1"
+              [style.text-align]="getPosicaoTexto(3)"
+              [style.font-size.pt]="item.tamanhoBotao"
+              [style.line-height.pt]="item.tamanhoBotao + 6">
+                <span
+                style="color: #ffffff;" *ngIf="item.nomeImage.indexOf('702') !== -1;else spanH703">{{ item.textoBotao }}</span>
+
+                <!--TEXTO H3 BOTAO 703-->
+                <ng-template #spanH703>
+                  <span>{{ item.textoBotao }}</span>
+                </ng-template>
+                </h3>
+
+            </ng-template>
+
+            <!--ICONE PRIORITARIO-->
+            <div class="image-content" *ngIf="!item.iconePrioritario">
+              <img src="./assets/images/{{ item.nomeImage.indexOf('702') !== -1 ? 'picto_702.png' : 'picto.png' }}" alt="Pictograma">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="page-footer" [innerHTML]="pagina.id === 1 ? pagina.msgExtra : ''"></div>
+    </div>
+</div>
+<ng-template #NoPage>
+  <div class="print-default-message">
+    <div class="print-msg-wpr h-100 row align-items-center">
+        <!--ERROR COMUNICATION-->
+        <p class='error-msg' style="margin-top: 0px;">
+          <i class="fa fa-warning fa-4x" aria-hidden="true" style="font-size: 2em;"></i>
+          <span *ngIf="error;else notError">Não foi possível carregar a interface. <br> O serviço pode estar indisponível.</span>
+          <ng-template #notError>
+            <span>Não foi possível carregar a interface. <br> Recursos não foram carregados.</span>
+          </ng-template>
+          <br><br>
+          Entre em contato com um analista responsável.
+        </p>
+    </div>
+  </div>
+</ng-template>
