@@ -4,7 +4,7 @@
     <p class="spinner-state">aguarde, carregando interface...</p>
   </div>
 </ngx-spinner>
-<div *ngIf="load;else NoPage">
+<div *ngIf="load === true && error === false;else NoPage">
     <div *ngIf="pagina">
       <div class="page-header">
         <p class="titulo-pagina" *ngFor="let item of pagina.interfaceEmissorTituloPagina;let i = index"

@@ -15,19 +15,18 @@ import { UserIdleService } from 'angular-user-idle';
 export class InterfaceComponent implements OnInit, OnDestroy {
   private page: number;
   private ticks: string;
-  public error: boolean;
-  public contentPagina: any[];
   private sub: Subscription;
   private subTimer: Subscription;
 
   public regexNegrito = /([*])(.+)/g;
-
+  public error: boolean;
+  public contentPagina: any[];
   public pagina: Pagina;
   public tituloPagina: TituloPagina[];
   public links: Link[];
   public botoes: Botao[];
   public qtdBotoes: number;
-  public load = true;
+  public load: boolean = false;
 
   private list = [];
 
@@ -61,9 +60,14 @@ export class InterfaceComponent implements OnInit, OnDestroy {
       }
 
       // returna a estrutura da interface da pagina corrente
-      setTimeout(() => {
-        this.loadInterface();
-      }, 500);
+      let tela = JSON.parse(localStorage.getItem('interface'));
+      if (tela !== null || tela !== undefined) {
+        this.load = true;
+        this.error = false;
+        if (this.load) {
+          this.loadInterface();
+        }
+      }
     });
   }
 
@@ -86,6 +90,7 @@ export class InterfaceComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem('interface');
         sessionStorage.setItem('interface', JSON.stringify(data.interfaceEmissorPagina));
         this.pagina = new Pagina();
+        this.load = true;
         this.error = false;
         this.loadInterface();
       }
