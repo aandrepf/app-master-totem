@@ -5,6 +5,7 @@ const args = require('electron-args');
 
 // tslint:disable-next-line:prefer-const
 let win: BrowserWindow;
+// tslint:disable-next-line: prefer-const
 let cli = args(`
     app
     Usage
@@ -18,12 +19,15 @@ let cli = args(`
     {
     default: {
         debug: false,
-        ssl: false
+        ssl: false,
+        endpoint: 'localhost'
     }
 });
 
 console.log('MODO DEBUG ATIVADO?', cli.flags.debug);
 console.log('IP/HOSTNAME DO TOTEM:', cli.flags.endpoint);
+
+app.disableHardwareAcceleration();
 
 app.on('ready', () => {
   createWindow();
@@ -48,6 +52,7 @@ function createWindow() {
     });
 
     win.setAutoHideMenuBar(true);
+    win.setMenuBarVisibility(false);
 
     // carrega a aplicação baseada no local onde esta o app minificado
     win.loadURL(
@@ -59,7 +64,7 @@ function createWindow() {
       );
 
       // abre o DEVTOOLS do Chrome
-      if (cli.flags.debug){
+      if (cli.flags.debug) {
         win.webContents.openDevTools();
       }
 

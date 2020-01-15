@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { InterfaceService } from './../services/interface.services';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserIdleService } from 'angular-user-idle';
@@ -11,7 +11,7 @@ import { Global } from '../app.globals';
   templateUrl: './print.component.html',
   styleUrls: ['./print.component.css']
 })
-export class PrintComponent implements OnInit {
+export class PrintComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   private urlServer: string;
@@ -38,23 +38,15 @@ export class PrintComponent implements OnInit {
       console.log('parametros impressão', params['id']);
       setTimeout(() => {
         this.imprimirSenha(params['id']);
-      }, 100);
+      }, 3000);
     });
+  }
 
-    this._userIdle.stopWatching();
-    this._userIdle.stopTimer();
+  ngOnDestroy() {
+    if (this.sub) { this.sub.unsubscribe(); }
   }
 
   imprimirSenha(idBotao: number) {
-
-    /*const params = [
-      'btn=' + idBotao,
-      '&btnID=' + idBotao,
-      '&tipoImpressao=' + 0
-    ];*/
-
-    // const url = 'http://localhost:8080/' + params.join('');
-    // console.log('url impressão :', url);
     const infos = {
       btnId: idBotao,
       categoriaId: idBotao,
@@ -64,42 +56,22 @@ export class PrintComponent implements OnInit {
       (data: any) => {
         this.valorSenha = data.ticket;
         console.log('senha', this.valorSenha);
-        if(this.valorSenha === undefined || this.valorSenha === null) {
+        if (this.valorSenha === undefined || this.valorSenha === null) {
           this.error = true;
           this.waiting = false;
-          setTimeout(() => { this._router.navigate(['/interface']); }, 3000);
+          setTimeout(() => { this._router.navigate(['/']); }, 3000);
         } else {
           this.senha = true;
           this.waiting = false;
-          setTimeout(() => { this._router.navigate(['/interface']); }, 3000);
+          setTimeout(() => { this._router.navigate(['/']); }, 3000);
         }
       },
       error => {
         console.log('erro no serviço');
         this.error = true;
         this.waiting = false;
-        setTimeout(() => { this._router.navigate(['/interface']); }, 3000);
+        setTimeout(() => { this._router.navigate(['/']); }, 3000);
       }
     );
-    /*this._http.post(url, '').pipe(
-      //da um retry 2 vezes para o serviço
-      retry(2)
-    ).subscribe(
-      (data: any) => {
-        this.valorSenha = data.Ticket;
-        console.log('senha', this.valorSenha);
-        this.senha = true;
-        this.waiting = false;
-        setTimeout(() => {
-          this._router.navigate(['/interface']);
-        }, 3000);
-      },
-      error => {
-        console.log('Tentou imprimir 2x');
-        this.error = true;
-        this.waiting = false;
-        setTimeout(() => { this._router.navigate(['/interface']); }, 3000);
-      }
-    );*/
   }
 }

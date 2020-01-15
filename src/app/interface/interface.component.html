@@ -1,26 +1,26 @@
 <ngx-spinner bdOpacity = 0.9 bdColor = "#212121" size = "large" color = "#fff" type = "ball-clip-rotate-pulse" fullScreen = "true">
   <!-- STATES DA APLICAÇÃO -->
   <div class="col-sm-12 info-states">
-    <p class="spinner-state">aguarde, carregando interface...</p>
+    <p class="spinner-state">aguarde, carregando...</p>
   </div>
 </ngx-spinner>
 <div *ngIf="load === true && error === false;else NoPage">
     <div *ngIf="pagina">
       <div class="page-header">
-        <p class="titulo-pagina" *ngFor="let item of pagina.interfaceEmissorTituloPagina;let i = index"
-          [style.padding-top.px]="item.length === 1 ? 27 : 0"
+        <p class="titulo-pagina" *ngFor="let item of tituloPagina;let i = index"
+          [style.padding-top.px]="titlePaddingTop"
           [style.font-size.pt]="item.tamanhoFonte"
           [style.line-height.pt]="item.tamanhoFonte"
           [style.font-weight]="item.negrito === true ? 700 : 400"
         >{{ item.textoPagina }}</p>
-        <img src="./assets/images/back.png" alt="Botão Voltar" *ngIf="pagina.btnVoltar" (click)="previousPage()">
+        <img src="./assets/images/back.png" alt="Botão Voltar" *ngIf="previousButton" (click)="previousPage()">
         <p class="retirar-senha">Retire aqui sua <span>SENHA/TICKET</span></p>
       </div>
       <div class="page-content">
 
         <!--LINKS-->
         <div *ngFor="let item of links;let i = index"
-          class="d-flex btn-padrao btn-padrao links-{{ i % 2 === 0 ? 'left' : 'right' }}"
+          class="btn-padrao btn-padrao links-{{ i % 2 === 0 ? 'left' : 'right' }}"
           [style.height]="item.iconePrioritario && item.interfaceEmissorTituloLink.length !== 1 ? '100%' : '217px'"
           (click)="navigate(item.idEmissorPagina, item.idEmissorPaginasDestino)"
           [style.display]="mostraLink(item.idEmissorPaginasDestino)"
@@ -130,7 +130,16 @@
           </div>
         </div>
       </div>
-      <div class="page-footer" [innerHTML]="pagina.id === 1 ? pagina.msgExtra : ''"></div>
+      <div class="page-footer" [innerHTML]="msgExtra"></div>
+      <div class="page-qrcode">
+        <div class="qrc-text">
+          <p><span class="upper"><strong>Não fique em fila</strong></span></p>
+          <p>Utilize nosso <span class="upper">App!</span></p>
+        </div>
+        <div class="qrc-qrcode">
+          <img src="./assets/qr-page.png">
+        </div>
+      </div>
     </div>
 </div>
 <ng-template #NoPage>
@@ -138,13 +147,14 @@
     <div class="print-msg-wpr h-100 row align-items-center">
         <!--ERROR COMUNICATION-->
         <p class='error-msg' style="margin-top: 0px;">
-          <i class="fa fa-warning fa-4x" aria-hidden="true" style="font-size: 2em;"></i>
-          <span *ngIf="error;else notError">Não foi possível carregar a interface. <br> O serviço pode estar indisponível.</span>
+          <!-- <i class="fa fa-warning fa-4x" aria-hidden="true" style="font-size: 2em;"></i> -->
+          <svg class="spinner" viewBox="0 0 50 50"><circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle></svg>
+          <span *ngIf="error;else notError">Iniciando a interface. <br> Por favor aguarde.</span>
           <ng-template #notError>
+            <i class="fa fa-warning fa-4x" aria-hidden="true" style="font-size: 2em;"></i>
             <span>Não foi possível carregar a interface. <br> Recursos não foram carregados.</span>
           </ng-template>
           <br><br>
-          Entre em contato com um analista responsável.
         </p>
     </div>
   </div>

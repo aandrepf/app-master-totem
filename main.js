@@ -6,14 +6,17 @@ var url = require("url");
 var args = require('electron-args');
 // tslint:disable-next-line:prefer-const
 var win;
+// tslint:disable-next-line: prefer-const
 var cli = args("\n    app\n    Usage\n    $ app --arg\n    $ app --arg=value\n    Options\n    --debug     modo debug [Default: false]\n    --ssl       protocolo de seguran\u00E7a [Default: false]\n    --endpoint  ip ou hostname do totem\n    ", {
     default: {
         debug: false,
-        ssl: false
+        ssl: false,
+        endpoint: 'localhost'
     }
 });
 console.log('MODO DEBUG ATIVADO?', cli.flags.debug);
 console.log('IP/HOSTNAME DO TOTEM:', cli.flags.endpoint);
+electron_1.app.disableHardwareAcceleration();
 electron_1.app.on('ready', function () {
     createWindow();
 });
@@ -34,6 +37,7 @@ function createWindow() {
         }
     });
     win.setAutoHideMenuBar(true);
+    win.setMenuBarVisibility(false);
     // carrega a aplicação baseada no local onde esta o app minificado
     win.loadURL(url.format({
         pathname: path.join(__dirname, "./dist/index.html"),

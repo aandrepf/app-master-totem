@@ -25,6 +25,7 @@
 html, body {
   height: 100%;
   overflow: hidden;
+  cursor: none!important;
 }
 .page-footer {
   color: #ffffff;
@@ -66,4 +67,33 @@ html, body {
   z-index: 99999!important;
   width: 100%;
   text-align: center;
+}
+span.upper {
+  text-transform: uppercase;
+}
+.page-qrcode {
+  *background: blue;
+  display: flex;
+  float: right;
+  width: 52%;
+  position: fixed;
+  bottom: 22px;
+  right: 0;
+}
+.qrc-text {
+  display: inline-block;
+  margin-right: 25px;
+  padding-top: 30px;
+}
+.qrc-text p {
+  color: #fff;
+  font-family: gilroyM;
+  font-size: 25px;
+  line-height: 23px;
+  text-align: right;
+}
+.qrc-qrcode img {
+  width: 79%;
+  position: relative;
+  top: 10px;
 }

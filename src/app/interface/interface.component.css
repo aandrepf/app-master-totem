@@ -130,10 +130,71 @@ span.text-categoria {
   font-size: 35px;
   margin-top: -110px;
 }
+/* SPINNER CSS ANIMATE */
+.spinner {
+  -webkit-animation: rotate 2s linear infinite;
+          animation: rotate 2s linear infinite;
+  z-index: 2;
+  position: absolute;
+  top: 498px;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+  width: 50px;
+  height: 50px;
+}
+.spinner .path {
+  stroke: #ffffff;
+  stroke-linecap: round;
+  -webkit-animation: dash 1.5s ease-in-out infinite;
+          animation: dash 1.5s ease-in-out infinite;
+}
+
+@-webkit-keyframes rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
 /* -------- FOOTER -------- */
 @media screen and (min-width: 1920px) and (max-height: 1080px) {
   p.titulo-pagina { font-size: 64pt!important;line-height: 64pt!important; }
   .page-header { height: 232px;}
+  .spinner {top: 278px;}
 }
 @media only screen and (min-width: 1366px) and (max-height: 768px) {
   .btn-padrao {
@@ -146,4 +207,5 @@ span.text-categoria {
     width: 52%;
   }
   .spinner-state { margin-top: -70px;}
+  .spinner {top:278px;}
 }

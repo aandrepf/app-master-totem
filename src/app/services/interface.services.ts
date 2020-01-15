@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Observable} from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { Global } from './../app.globals';
 import { InterfaceEmissor, Pagina } from '../models/interface.model';
@@ -31,7 +31,7 @@ export class InterfaceService {
 
   constructor(private _http: HttpClient, private router: Router, private _electron: ElectronService) {
     console.log('rodando electron?', this._electron.isElectronApp);
-    if(this._electron.isElectronApp) {
+    if (this._electron.isElectronApp) {
       this.retorno = this._electron.ipcRenderer.sendSync('com', { 'evt': 'startup' });
       this.endpoint = this.retorno.endpoint;
       this.protocol = this.retorno.ssl ? 'https' : 'http';
@@ -43,12 +43,16 @@ export class InterfaceService {
   }
 
   getInterfacePage(page: number) {
-    this.interfacePagina = page;
+    return page;
   }
 
-  getInterfaceContent() {
+  getInterfaceContent(): Observable<Pagina[]> {
     const url = `${this.protocol}://${this.endpoint}:8080/utils/buscaJsonInterface`;
-    return this._http.get(url);
+    return this._http.get<InterfaceEmissor>(url).pipe(
+      map(tela => {
+        return tela.interfaceEmissorPagina;
+      })
+    );
   }
 
   imprimirTicket(item: Object) {

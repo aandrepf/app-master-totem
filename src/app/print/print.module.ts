@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { PrintComponent } from './print.component';
+import { InitModule } from '../init/init.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    InitModule,
   ],
   declarations: [
     PrintComponent

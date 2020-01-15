@@ -1,11 +1,12 @@
-<div class="print-default-message">
+<app-init *ngIf="waiting" [show]="false"></app-init>
+<div class="print-default-message" *ngIf="!waiting">
     <div class="print-msg-wpr h-100 row align-items-center">
 
         <!--WAINTING-->
-        <p class='error-msg' *ngIf="waiting">
+        <!-- <p class='error-msg' *ngIf="waiting">
           Aguarde a impressão <br>e retire seu comprovante abaixo <br>
           <i class="fa fa-print fa-4x" aria-hidden="true"></i>
-        </p>
+        </p> -->
 
         <!--PRINT SUCCESS-->
         <div class="msg-senha" *ngIf="senha && !waiting">

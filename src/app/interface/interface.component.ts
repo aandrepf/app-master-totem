@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Global } from './../app.globals';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router, RouterEvent, NavigationStart } from '@angular/router';
 import { Subscription, timer } from 'rxjs';
 
@@ -25,10 +26,14 @@ export class InterfaceComponent implements OnInit, OnDestroy {
   public tituloPagina: TituloPagina[];
   public links: Link[];
   public botoes: Botao[];
-  public qtdBotoes: number;
-  public load: boolean = false;
+  public load = false;
+  public titlePaddingTop;
+  public msgExtra;
+  public previousButton;
+  public pageNav;
+  public timeIdle;
 
-  private list = [];
+  private list = [1];
 
   constructor(
     private _interface: InterfaceService,
@@ -37,38 +42,26 @@ export class InterfaceComponent implements OnInit, OnDestroy {
     private spinner: NgxSpinnerService,
     private _userIdle: UserIdleService
     ) {
-      _route.events.subscribe((event: RouterEvent) => {
+      /* _route.events.subscribe((event: RouterEvent) => {
         this.navigationInterceptor(event);
-      });
+      }); */
     }
 
+  @HostListener('window:click') windowClick(): void {
+    clearTimeout(this.timeIdle);
+  }
+
   ngOnInit() {
-    // this.spinner.show();
+    this.spinner.show();
     // verifica a cada 2 minutos se o JSON da interface atualizou
-    this.subTimer = timer(0, 120 * 1000).subscribe((t: any) => {
-      console.log('verificação de JSON iniciou');
-      this.tickerFunc(t);
+    this.subTimer = timer(0, 10 * 1000).subscribe((t: any) => {
+      this.verificaInterface();
     });
 
-    this.sub = this._active.params.subscribe(params => {
+    /* this.sub = this._active.params.subscribe(params => {
       // variavel que armazena o número da pagina vindo da url
-      if (params['id'] === undefined) {
-        this._interface.getInterfacePage(1);
-      } else {
-        this.page = +params['id'];
-        this._interface.getInterfacePage(this.page);
-      }
-
-      // returna a estrutura da interface da pagina corrente
-      let tela = JSON.parse(localStorage.getItem('interface'));
-      if (tela !== null || tela !== undefined) {
-        this.load = true;
-        this.error = false;
-        if (this.load) {
-          this.loadInterface();
-        }
-      }
-    });
+      this.pageNav = isNaN(+params['id']) ? this._interface.getInterfacePage(1) : this._interface.getInterfacePage(+params['id']);
+    }); */
   }
 
   ngOnDestroy() {
@@ -76,29 +69,31 @@ export class InterfaceComponent implements OnInit, OnDestroy {
     if (this.subTimer !== undefined) { this.subTimer.unsubscribe(); }
   }
 
-  public tickerFunc(tick: any) {
-    const d = new Date(0, 0, 0, 0, 0, tick, 0);
-    this.ticks = d.toString();
-    this.ticks = this.ticks.substring(16, 24);
-    this.spinner.show();
+  public verificaInterface() {
     this._interface.getInterfaceContent().subscribe(
-    (data: InterfaceEmissor) => {
-      if (data.interfaceEmissorPagina === undefined || data.interfaceEmissorPagina === null) {
+    (data) => {
+      if (!data) {
         this.load = false;
         this.error = false;
       } else {
-        sessionStorage.removeItem('interface');
-        sessionStorage.setItem('interface', JSON.stringify(data.interfaceEmissorPagina));
-        this.pagina = new Pagina();
         this.load = true;
         this.error = false;
-        this.loadInterface();
+        Global.PAGEITEM = data;
+        this.contentPagina = data.map(
+          (item: Pagina) => {
+            return {
+              pagina: item.id,
+              totalBotao: item.interfaceEmissorBotao.length
+          };
+        });
+        this.loadInterface(1);
+        if (this.subTimer) { this.subTimer.unsubscribe(); }
       }
-    },(error) => {
+    }, (error) => {
       this.load = false;
       this.error = true;
       this.spinner.hide();
-    }, ()=> {
+    }, () => {
       this.spinner.hide();
     });
   }
@@ -114,44 +109,59 @@ export class InterfaceComponent implements OnInit, OnDestroy {
     }
   }
 
-  public loadInterface() {
-    this.pagina = JSON.parse(sessionStorage.getItem('interface'))
-      .filter((item: Pagina) => item.id === this._interface.interfacePagina)[0];
-    this.tituloPagina = this.pagina.interfaceEmissorTituloPagina;
-    this.links = this.pagina.interfaceEmissorLink;
-    this.botoes = this.pagina.interfaceEmissorBotao;
+  public loadInterface(page: number) {
+    this.pageNav = page;
 
-    this.contentPagina = JSON.parse(sessionStorage.getItem('interface')).map(
-      (item: Pagina) => {
-        return {
-          pagina: item.id,
-          totalBotao: item.interfaceEmissorBotao.length
-      }
-    });
+    console.log(`estamos na pagina ${this.pageNav}`);
+
+    let item: Pagina = Global.PAGEITEM.filter(p => p.id === this.pageNav)[0];
+    this.pagina = item;
+
+    this.tituloPagina = item.interfaceEmissorTituloPagina;
+    this.titlePaddingTop = this.tituloPagina.length === 1 ? '27' : '0';
+    this.previousButton = item.btnVoltar;
+    this.links = item.interfaceEmissorLink;
+    this.botoes = item.interfaceEmissorBotao;
+    this.msgExtra = item.id === 1 ? item.msgExtra : '';
+
+    if (page !== 1) {
+      this.timeIdle = setTimeout(() => {
+        this.loadInterface(1);
+      }, 40 * 1000);
+    } else {
+      clearTimeout(this.timeIdle);
+    }
   }
 
   public mostraLink(destino: number): string {
     let p = this.contentPagina.filter((item) => {
       return item.pagina === destino;
     });
-    if(p[0].totalBotao === 0){
+    if (p[0].totalBotao === 0) {
       return 'none';
     }
     return 'flex';
   }
 
+  // ACIONADO PELOS LINKS EXISTENTES
   public navigate(origem: number, destino: number) {
-    this._route.navigate(['/interface', destino]);
-    this.list.push(origem, destino);
+    // this._route.navigate(['/interface', destino]);
+    // this.list.push(origem, destino);
+    setTimeout(() => {
+      this.list.push(destino);
+      this.loadInterface(destino);
+    }, 100);
   }
 
+  // RETORNA UMA PAGINA ANTES
   public previousPage() {
     this.list.pop();
-    if (this.list.length === 0) {
-      this._route.navigate(['/interface']);
-    } else {
-      this._route.navigate(['/interface', this.list[0]]);
-    }
+    console.log('previous rota', this.list);
+    setTimeout(() => {
+      let t = this.list.length;
+      this.loadInterface(this.list[this.list.length - 1]);
+      if (t === 1) { this.verificaInterface(); }
+    }, 100);
   }
 
 /*
@@ -165,12 +175,12 @@ export class InterfaceComponent implements OnInit, OnDestroy {
     }
  }
 
- public navigationInterceptor(event: RouterEvent): void {
+ /* public navigationInterceptor(event: RouterEvent): void {
   if (event instanceof NavigationStart) {
     const page = event.url.substring(11);
-    this.verifyIdleUser(page);
+    // this.verifyIdleUser(page);
   }
- }
+ } */
 
  /*
     VERIFICA SE USUARIO ESTÁ IDLE NA PAGINA

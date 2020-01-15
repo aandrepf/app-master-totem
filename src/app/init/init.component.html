@@ -1,0 +1,34 @@
+<div class='init-header'>
+  <p class="init-title"><span class="upper">Não fique em fila</span></p>
+</div>
+
+<div class="init-info">
+  <div class="init-info-text">
+    <p>Faça suas <span class="upper">transações</span></p>
+    <p>Pelo nosso <span class="upper">app!</span></p>
+  </div>
+  <div class="init-info-qrcode" [style.visibility]="show ? 'visible' : 'hidden'">
+    <img src="./assets/qr-init.png">
+    <p>Baixe o App!</p>
+  </div>
+</div>
+
+<div class="init-banner">
+  <p>
+    <img class="banner-cellphone" src="./assets/cellphone.png">
+  </p>
+</div>
+
+<div class="init-action"
+[style.visibility]="show ? 'visible' : 'hidden'"
+[style.display]="show ? 'flex' : 'none'">
+  <button class="init-btn" type="button" (click)="initAttendace()"><span class="upper">iniciar atendimento bradesco</span></button>
+</div>
+
+<div class="init-print"
+[style.visibility]="!show ? 'visible' : 'hidden'"
+[style.display]="!show ? 'block' : 'none'">
+  <p>Aguarde a impressão de</p>
+  <p>seu comprovante</p>
+  <p class="small">Procure um funcionário da agência/ Peça ajuda a um funcionário da agência</p>
+</div>

@@ -1,0 +1,126 @@
+@font-face {
+  font-family: gilroyB;
+  src: url('./../../fonts/gilroy-bold-webfont.woff2') format('woff2'),
+       url('./../../fonts/gilroy-bold-webfont.woff') format('woff'),
+       url('./../../fonts/gilroy-bold-webfont.ttf') format('truetype');
+  font-weight: normal;font-style: normal;
+}
+@font-face {
+  font-family: gilroyEB;
+  src: url('./../../fonts/gilroy-extrabold-webfont.woff2') format('woff2'),
+       url('./../../fonts/gilroy-extrabold-webfont.woff') format('woff'),
+       url('./../../fonts/gilroy-extrabold-webfont.ttf') format('truetype');
+  font-weight: normal;font-style: normal;
+}
+@font-face {
+  font-family: gilroyM;
+  src: url('./../../fonts/gilroy-medium-webfont.woff2') format('woff2'),
+       url('./../../fonts/gilroy-medium-webfont.woff') format('woff'),
+       url('./../../fonts/gilroy-medium-webfont.ttf') format('truetype');
+  font-weight: normal;font-style: normal;
+}
+@font-face {
+  font-family: gilroyR;
+  src: url('./../../fonts/gilroy-regular-webfont.woff2') format('woff2'),
+       url('./../../fonts/gilroy-regular-webfont.woff') format('woff'),
+       url('./../../fonts/gilroy-regular-webfont.ttf') format('truetype');
+  font-weight: normal;font-style: normal;
+}
+
+.init-header, .init-info, .init-banner, .init-action, .init-print {
+  *background: blue;
+  margin-right: 40px;
+  padding-top:10px;
+  display: flex;
+}
+
+.init-info {
+  margin-top: 5px;
+}
+
+.init-banner {
+  margin-top: 20px;
+}
+
+.init-action {
+  margin-top: 15px;
+  padding: 0 8px 0;
+}
+
+.init-print {
+  margin-top: 15px;
+  display: block;
+  padding-right: 20px;
+}
+
+p.init-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 75px;
+  font-family: gilroyB;
+}
+
+.init-info-text, .init-info-qrcode {
+  display: inline-block;
+  color: #ffffff;
+}
+
+.init-info-text {
+  width: 70%;
+  padding: 27px 0 0;
+}
+
+.init-info-qrcode {
+  width: 30%;
+  padding-left: 57px;
+}
+
+.init-info-text p {
+  font-family: gilroyM;
+  font-size: 40px;
+  line-height: 33px;
+}
+
+.init-info-qrcode p {
+  font-family: gilroyM;
+  font-size: 25px;
+  margin: 8px -5px 0;
+}
+
+.init-banner p {
+  display: block;
+  margin: 0 auto;
+}
+
+button.init-btn {
+  background-color: #ffffff;
+  border: 0;
+  width: 100%;
+  color: red;
+  font-family: gilroyB;
+  font-size: 35px;
+  line-height: 130px;
+  -webkit-clip-path: polygon(0% 0%, 100% 0, 100% 75%, 92% 100%, 0% 100%);
+  clip-path: polygon(0% 0%, 100% 0, 100% 75%, 92% 100%, 0% 100%);
+}
+
+.init-print p {
+  font-family: gilroyM;
+  color: #ffffff;
+  font-size: 40px;
+  line-height: 33px;
+  text-align: right;
+}
+
+.init-print p.small {
+  font-family: gilroyM;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: right;
+  padding-left: 270px;
+}
+
+@media screen and (min-width: 1920px) and (min-height: 1080px) {
+
+}
